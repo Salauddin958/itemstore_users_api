@@ -1,9 +1,11 @@
 package users
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/Salauddin958/itemstore_oauth_go/oauth"
 	users "github.com/Salauddin958/itemstore_users_api/domain/users"
 	services "github.com/Salauddin958/itemstore_users_api/services"
 	"github.com/federicoleon/bookstore_utils-go/rest_errors"
@@ -35,6 +37,10 @@ func Create(c *gin.Context) {
 }
 
 func Get(c *gin.Context) {
+	if err := oauth.AuthenticateRequest(c.Request); err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
 	userId, idErr := getUserId(c.Param("user_id"))
 	if idErr != nil {
 		c.JSON(idErr.Status(), idErr)
@@ -45,7 +51,12 @@ func Get(c *gin.Context) {
 		c.JSON(getErr.Status(), getErr)
 		return
 	}
-	c.JSON(http.StatusOK, user.Marshall(true))
+	if oauth.GetCallerId(c.Request) == user.Id {
+		c.JSON(http.StatusOK, user.Marshall(false))
+		return
+	}
+	fmt.Println("header :::;", c.Request.Header)
+	c.JSON(http.StatusOK, user.Marshall(oauth.IsPublic(c.Request)))
 }
 
 func Update(c *gin.Context) {

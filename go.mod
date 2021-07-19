@@ -3,6 +3,7 @@ module github.com/Salauddin958/itemstore_users_api
 go 1.16
 
 require (
+	github.com/Salauddin958/itemstore_oauth_go v0.0.0-20210716120009-dbccca4c8452 // indirect
 	github.com/federicoleon/bookstore_utils-go v0.0.0-20200406081703-a9b52b6e34e6 // indirect
 	github.com/gin-gonic/gin v1.7.2 // indirect
 	github.com/go-playground/validator/v10 v10.7.0 // indirect
